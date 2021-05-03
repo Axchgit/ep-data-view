@@ -60,7 +60,7 @@ export default {
   methods: {
     async fetchList() {
       const { status, data } = await this.$http.get(
-        "api/DataView/expecCommissionRanking"
+        process.env.VUE_APP_API+"/DataView/expecCommissionRanking"
       );
       if (status === 200) {
         if (

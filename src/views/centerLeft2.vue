@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Author: xch
+ * @Date: 2020-09-20 02:39:12
+ * @FilePath: \vue-framed:\wamp64\www\ep-data-view\src\views\centerLeft2.vue
+ * @LastEditTime: 2021-05-03 18:57:35
+ * @LastEditors: xch
+-->
 <template>
   <div id="centreLeft1">
     <div class="bg-color-black">
@@ -40,7 +48,7 @@ export default {
   methods: {
     async fetchList() {
       const { status, data } = await this.$http.get(
-        "api/DataView/OrderAmountDistribution"
+        process.env.VUE_APP_API+"/DataView/OrderAmountDistribution"
       );
       if (status === 200) {
         if (JSON.stringify(data.data) !== JSON.stringify(this.dataArr)) {

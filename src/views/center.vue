@@ -147,7 +147,7 @@ export default {
   methods: {
     async fetchList() {
       const { status, data } = await this.$http.get(
-        "api/DataView/PerformanceRanking"
+        process.env.VUE_APP_API+"/DataView/PerformanceRanking"
       );
       if (status === 200) {
         if (JSON.stringify(data.data)!==JSON.stringify(this.ranking.data)) {
