@@ -1,9 +1,22 @@
+/*
+ * @Description: 
+ * @Author: xch
+ * @Date: 2020-09-20 02:39:12
+ * @FilePath: \vue-framed:\wamp64\www\ep-data-view\src\main.js
+ * @LastEditTime: 2021-05-03 19:40:41
+ * @LastEditors: xch
+ */
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import dataV from '@jiaminghi/data-view';
-
+import moment from 'moment'
+//定义一个全局过滤器实现日期格式化
+Vue.filter('datrfmt',function (input,fmtstring) {//当input为时间戳时，需转为Number类型
+  // 使用momentjs这个日期格式化类库实现日期的格式化功能
+  return moment(input).format(fmtstring);
+});
 Vue.use(dataV);
 
 // 按需引入vue-awesome图标

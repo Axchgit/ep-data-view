@@ -61,7 +61,9 @@
               "
             >
               <span class="react-after"></span>
-              <span class="text">{{ nowTime | formatDate }}</span>
+              <span class="text">{{
+                nowTime
+              }}</span>
             </div>
           </div>
         </div>
@@ -110,6 +112,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import centerLeft1 from "./centerLeft1";
 import centerLeft2 from "./centerLeft2";
 import centerRight1 from "./centerRight1";
@@ -133,73 +136,78 @@ export default {
     bottomLeft,
     bottomRight,
   },
-  filters: {
-    formatDate: function (value) {
-      // var date = new Date(value);
-      // var year = date.getFullYear();
-      // var month = padDate(date.getMonth()+1);
-      // var day = padDate(date.getDate());
-      // var hours = padDate(date.getHours());
-      // var minutes = padDate(date.getMinutes());
-      // var seconds = padDate(date.getSeconds());
-      // //整理好的数据返回出去
-      // return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
-      // return formatTimeToStr(value, "yyyy-MM-dd");
-      let wk = value.getDay();
-      let year = value.getFullYear();
-      /* 在日期格式中，月份是从0开始的，因此要加0
-       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
-       * */
-      let month =
-        value.getMonth() + 1 < 10
-          ? "0" + (value.getMonth() + 1)
-          : value.getMonth() + 1;
-      let day = value.getDate() < 10 ? "0" + value.getDate() : value.getDate();
-      let hours =
-        value.getHours() < 10 ? "0" + value.getHours() : value.getHours();
-      let minutes =
-        value.getMinutes() < 10 ? "0" + value.getMinutes() : value.getMinutes();
-      let seconds =
-        value.getSeconds() < 10 ? "0" + value.getSeconds() : value.getSeconds();
-      // 拼接
-      let weeks = [
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六",
-      ];
-      let week = weeks[wk];
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        ":" +
-        seconds +
-        "  " +
-        week
-      );
-    },
-  },
+  // filters: {
+  //   moment: function () {
+  //     moment.locale(); 
+  //     return moment().format('LLLL');
+  //   },
+  //   formatDate: function (value) {
+  //     // var date = new Date(value);
+  //     // var year = date.getFullYear();
+  //     // var month = padDate(date.getMonth()+1);
+  //     // var day = padDate(date.getDate());
+  //     // var hours = padDate(date.getHours());
+  //     // var minutes = padDate(date.getMinutes());
+  //     // var seconds = padDate(date.getSeconds());
+  //     // //整理好的数据返回出去
+  //     // return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
+  //     // return formatTimeToStr(value, "yyyy-MM-dd");
+  //     let wk = value.getDay();
+  //     let year = value.getFullYear();
+  //     /* 在日期格式中，月份是从0开始的，因此要加0
+  //      * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+  //      * */
+  //     let month =
+  //       value.getMonth() + 1 < 10
+  //         ? "0" + (value.getMonth() + 1)
+  //         : value.getMonth() + 1;
+  //     let day = value.getDate() < 10 ? "0" + value.getDate() : value.getDate();
+  //     let hours =
+  //       value.getHours() < 10 ? "0" + value.getHours() : value.getHours();
+  //     let minutes =
+  //       value.getMinutes() < 10 ? "0" + value.getMinutes() : value.getMinutes();
+  //     let seconds =
+  //       value.getSeconds() < 10 ? "0" + value.getSeconds() : value.getSeconds();
+  //     // 拼接
+  //     let weeks = [
+  //       "星期日",
+  //       "星期一",
+  //       "星期二",
+  //       "星期三",
+  //       "星期四",
+  //       "星期五",
+  //       "星期六",
+  //     ];
+  //     let week = weeks[wk];
+  //     return (
+  //       year +
+  //       "-" +
+  //       month +
+  //       "-" +
+  //       day +
+  //       " " +
+  //       hours +
+  //       ":" +
+  //       minutes +
+  //       ":" +
+  //       seconds +
+  //       "  " +
+  //       week
+  //     );
+  //   },
+  // },
   mounted() {
     this.cancelLoading();
     this.timer = setInterval(() => {
-      this.nowTime = new Date(); // 修改数据date
+      moment.locale('zh-cn')
+      this.nowTime = moment().format('YYYY年 Mo Do dddd HH:mm:ss'); // 修改数据date
     }, 1000);
   },
   methods: {
     cancelLoading() {
       setTimeout(() => {
         this.loading = false;
-      }, 500);
+      }, 5000);
     },
   },
   beforeDestroy() {
