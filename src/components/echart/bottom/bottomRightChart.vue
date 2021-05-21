@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="bottomRightChart" style="width:11.25rem;height:6rem;"></div>
+    <div id="bottomRightChart" style="width: 11.25rem; height: 6rem"></div>
   </div>
 </template>
 
@@ -10,68 +10,104 @@ import echartMixins from "@/utils/resizeMixins";
 export default {
   data() {
     return {
-      chart: null
+      times: 0,
+      weeks: 0,
+      chart: null,
+      weekLineCountData:[],
+      startTime:0
     };
   },
   mounted() {
+    this.getCountOrderSum();
     this.draw();
     this.charTimg();
   },
   mixins: [echartMixins],
   methods: {
+    async getCountOrderSum() {
+      const { status, data } = await this.$http.get(
+        process.env.VUE_APP_API + "/DataView/getOrderSumByDayInFourWeek"
+      );
+      if (status === 200) {
+        this.weekLineCountData = data.data[1]
+        this.startTime = data.data[0]
+      }
+    },
+
+
     charTimg() {
       setInterval(() => {
         this.draw();
-      }, 6000);
+
+        this.times = this.times + 1;
+        this.weeks = this.times % 4;
+      }, 10000);
     },
     draw() {
       // 基于准备好的dom，初始化echarts实例
-      this.chart = this.$echarts.init(document.getElementById("bottomRightChart"));
+      this.chart = this.$echarts.init(
+        document.getElementById("bottomRightChart")
+      );
       //  ----------------------------------------------------------------
       // 数据
-      let dateBase = new Date();
-      let year = dateBase.getFullYear();
-      let dottedBase = +dateBase + 1000 * 3600 * 24;
+      // let dateBase = new Date();
+      // let year = dateBase.getFullYear();
+      // let dottedBase = +dateBase + 1000 * 3600 * 24;
+      let dottedBase = this.startTime*1000 + 1000 * 3600 * 24;
+      // console.log(this.weekLineCountData)
+
       let weekCategory = [];
 
-      let radarData = [];
-      let radarDataAvg = [];
-      let maxData = 12000;
-      let weekMaxData = [];
+      // let radarData = [];
+      // let radarDataAvg = [];
+      let maxData = 70;
+      // let weekMaxData = [];
       let weekLineData = [];
+
+      // console.log(this.times);
+      // console.log(this.times % 4);
+      // console.log(this.weeks);
 
       // 周数据
       for (let i = 0; i < 7; i++) {
         // 日期
-        var date = new Date((dottedBase -= 1000 * 3600 * 24));
+        // if()
+        var date = new Date(
+          (dottedBase -= 1000 * 3600 * 24) - 1000 * 3600 * 24 * this.weeks * 7
+        );
+        // var weekDate = date-
         weekCategory.unshift([date.getMonth() + 1, date.getDate()].join("/"));
 
         // 折线图数据
-        weekMaxData.push(maxData);
-        var distance = Math.round(Math.random() * 11000 + 500);
-        weekLineData.push(distance);
+        // weekMaxData.push(maxData);
+        // var distance = Math.round(Math.random() * 11000 + 500);
+        // weekLineData.push(distance);
+        weekLineData.push(this.weekLineCountData[(this.weeks + 1) * 7 - i - 1]+20 );
+        // console.log(this.weekLineCountData[(this.weeks + 1) * 7 - i - 1])
 
         // 雷达图数据
         // 我的指标
-        var averageSpeed = +(Math.random() * 5 + 3).toFixed(3);
-        var maxSpeed = averageSpeed + +(Math.random() * 3).toFixed(2);
-        var hour = +(distance / 1000 / averageSpeed).toFixed(1);
-        var radarDayData = [distance, averageSpeed, maxSpeed, hour];
-        radarData.unshift(radarDayData);
+        // var averageSpeed = +(Math.random() * 5 + 3).toFixed(3);
+        // var maxSpeed = averageSpeed + +(Math.random() * 3).toFixed(2);
+        // var hour = +(distance / 1000 / averageSpeed).toFixed(1);
+        // var radarDayData = [distance, averageSpeed, maxSpeed, hour];
+        // radarData.unshift(radarDayData);
 
-        // 平均指标
-        var distanceAvg = Math.round(Math.random() * 8000 + 4000);
-        var averageSpeedAvg = +(Math.random() * 4 + 4).toFixed(3);
-        var maxSpeedAvg = averageSpeedAvg + +(Math.random() * 2).toFixed(2);
-        var hourAvg = +(distance / 1000 / averageSpeed).toFixed(1);
-        var radarDayDataAvg = [
-          distanceAvg,
-          averageSpeedAvg,
-          maxSpeedAvg,
-          hourAvg
-        ];
-        radarDataAvg.unshift(radarDayDataAvg);
+        // // 平均指标
+        // var distanceAvg = Math.round(Math.random() * 8000 + 4000);
+        // var averageSpeedAvg = +(Math.random() * 4 + 4).toFixed(3);
+        // var maxSpeedAvg = averageSpeedAvg + +(Math.random() * 2).toFixed(2);
+        // var hourAvg = +(distance / 1000 / averageSpeed).toFixed(1);
+        // var radarDayDataAvg = [
+        //   distanceAvg,
+        //   averageSpeedAvg,
+        //   maxSpeedAvg,
+        //   hourAvg
+        // ];
+        // radarDataAvg.unshift(radarDayDataAvg);
       }
+      // console.log(weekCategory);
+      // console.log(weekLineData);
 
       // 颜色设置
       let color = {
@@ -84,13 +120,13 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#f5b44d"
+              color: "#f5b44d",
             },
             {
               offset: 1,
-              color: "#28f8de"
-            }
-          ]
+              color: "#28f8de",
+            },
+          ],
         },
         linearGtoB: {
           type: "linear",
@@ -101,13 +137,13 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#43dfa2"
+              color: "#43dfa2",
             },
             {
               offset: 1,
-              color: "#28f8de"
-            }
-          ]
+              color: "#28f8de",
+            },
+          ],
         },
         linearBtoG: {
           type: "linear",
@@ -118,13 +154,13 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#1c98e8"
+              color: "#1c98e8",
             },
             {
               offset: 1,
-              color: "#28f8de"
-            }
-          ]
+              color: "#28f8de",
+            },
+          ],
         },
         areaBtoG: {
           type: "linear",
@@ -135,14 +171,14 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "rgba(35,184,210,.2)"
+              color: "rgba(35,184,210,.2)",
             },
             {
               offset: 1,
-              color: "rgba(35,184,210,0)"
-            }
-          ]
-        }
+              color: "rgba(35,184,210,0)",
+            },
+          ],
+        },
       };
       let option = {
         title: {
@@ -150,50 +186,50 @@ export default {
           textStyle: {
             color: "#D3D6DD",
             fontSize: 24,
-            fontWeight: "normal"
+            fontWeight: "normal",
           },
-          subtext: year + "/" + weekCategory[6],
+          // subtext: year + "/" + weekCategory[6], //当前日期
           subtextStyle: {
             color: "#fff",
-            fontSize: 16
+            fontSize: 16,
           },
-          top: 50,
-          left: 80
-        },
-        legend: {
-          top: 120,
+          top: 0,
           left: 80,
-          orient: "vertical",
-          itemGap: 15,
-          itemWidth: 12,
-          itemHeight: 12,
-          data: ["平均指标", "我的指标"],
-          textStyle: {
-            color: "#fff",
-            fontSize: 14
-          }
         },
+        // legend: {
+        //   top: 120,
+        //   left: 80,
+        //   orient: "vertical",
+        //   itemGap: 15,
+        //   itemWidth: 12,
+        //   itemHeight: 12,
+        //   data: ["平均指标", "我的指标"],
+        //   textStyle: {
+        //     color: "#fff",
+        //     fontSize: 14
+        //   }
+        // },
         tooltip: {
-          trigger: "item"
+          trigger: "item",
         },
         radar: {
           center: ["68%", "27%"],
           radius: "40%",
           name: {
-            color: "#fff"
+            color: "#fff",
           },
           splitNumber: 8,
           axisLine: {
             lineStyle: {
               color: color.linearYtoG,
-              opacity: 0.6
-            }
+              opacity: 0.6,
+            },
           },
           splitLine: {
             lineStyle: {
               color: color.linearYtoG,
-              opacity: 0.6
-            }
+              opacity: 0.6,
+            },
           },
           splitArea: {
             areaStyle: {
@@ -202,33 +238,33 @@ export default {
               shadowBlur: 25,
               shadowColor: "#000",
               shadowOffsetX: 0,
-              shadowOffsetY: 5
-            }
+              shadowOffsetY: 5,
+            },
           },
-          indicator: [
-            {
-              name: "服务态度",
-              max: maxData
-            },
-            {
-              name: "产品质量",
-              max: 10
-            },
-            {
-              name: "任务效率",
-              max: 12
-            },
-            {
-              name: "售后保障",
-              max: 3.5
-            }
-          ]
+          // indicator: [
+          //   {
+          //     name: "服务态度",
+          //     max: maxData
+          //   },
+          //   {
+          //     name: "产品质量",
+          //     max: 10
+          //   },
+          //   {
+          //     name: "任务效率",
+          //     max: 12
+          //   },
+          //   {
+          //     name: "售后保障",
+          //     max: 3.5
+          //   }
+          // ]
         },
         grid: {
           left: 90,
-          right: 80,
+          right: 40,
           bottom: 40,
-          top: "60%"
+          top: "15%",
         },
         xAxis: {
           type: "category",
@@ -236,94 +272,94 @@ export default {
           axisLine: true,
           axisLabel: {
             color: "rgba(255,255,255,.8)",
-            fontSize: 12
+            fontSize: 12,
           },
-          data: weekCategory
+          data: weekCategory,
         },
         // 下方Y轴
         yAxis: {
-          name: "工单",
+          name: "出单量",
           nameLocation: "end",
           nameGap: 24,
           nameTextStyle: {
             color: "rgba(255,255,255,.5)",
-            fontSize: 14
+            fontSize: 14,
           },
           max: maxData,
           splitNumber: 4,
 
           axisLine: {
             lineStyle: {
-              opacity: 0
-            }
+              opacity: 0,
+            },
           },
           splitLine: {
             show: true,
             lineStyle: {
               color: "#fff",
-              opacity: 0.1
-            }
+              opacity: 0.1,
+            },
           },
           axisLabel: {
             color: "rgba(255,255,255,.8)",
-            fontSize: 12
-          }
+            fontSize: 12,
+          },
         },
         series: [
           {
             name: "",
             type: "radar",
             symbolSize: 0,
-            data: [
-              {
-                value: radarDataAvg[6],
-                name: "平均指标",
-                itemStyle: {
-                  normal: {
-                    color: "#f8d351"
-                  }
-                },
-                lineStyle: {
-                  normal: {
-                    opacity: 0
-                  }
-                },
-                areaStyle: {
-                  normal: {
-                    color: "#f8d351",
-                    shadowBlur: 25,
-                    shadowColor: "rgba(248,211,81,.3)",
-                    shadowOffsetX: 0,
-                    shadowOffsetY: -10,
-                    opacity: 1
-                  }
-                }
-              },
-              {
-                value: radarData[6],
-                name: "我的指标",
-                itemStyle: {
-                  normal: {
-                    color: "#43dfa2"
-                  }
-                },
-                lineStyle: {
-                  normal: {
-                    opacity: 0
-                  }
-                },
-                areaStyle: {
-                  normal: {
-                    color: color.linearGtoB,
-                    shadowBlur: 15,
-                    shadowColor: "rgba(0,0,0,.2)",
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 5,
-                    opacity: 0.8
-                  }
-                }
-              }
-            ]
+            // data: [
+            //   {
+            //     value: radarDataAvg[6],
+            //     name: "平均指标",
+            //     itemStyle: {
+            //       normal: {
+            //         color: "#f8d351"
+            //       }
+            //     },
+            //     lineStyle: {
+            //       normal: {
+            //         opacity: 0
+            //       }
+            //     },
+            //     areaStyle: {
+            //       normal: {
+            //         color: "#f8d351",
+            //         shadowBlur: 25,
+            //         shadowColor: "rgba(248,211,81,.3)",
+            //         shadowOffsetX: 0,
+            //         shadowOffsetY: -10,
+            //         opacity: 1
+            //       }
+            //     }
+            //   },
+            //   {
+            //     value: radarData[6],
+            //     name: "我的指标",
+            //     itemStyle: {
+            //       normal: {
+            //         color: "#43dfa2"
+            //       }
+            //     },
+            //     lineStyle: {
+            //       normal: {
+            //         opacity: 0
+            //       }
+            //     },
+            //     areaStyle: {
+            //       normal: {
+            //         color: color.linearGtoB,
+            //         shadowBlur: 15,
+            //         shadowColor: "rgba(0,0,0,.2)",
+            //         shadowOffsetX: 0,
+            //         shadowOffsetY: 5,
+            //         opacity: 0.8
+            //       }
+            //     }
+            //   }
+            // ]
           },
           {
             name: "",
@@ -333,19 +369,19 @@ export default {
             symbolSize: 8,
             itemStyle: {
               normal: {
-                color: "#fff"
-              }
+                color: "#fff",
+              },
             },
             lineStyle: {
               normal: {
                 color: color.linearBtoG,
-                width: 3
-              }
+                width: 3,
+              },
             },
             areaStyle: {
               normal: {
-                color: color.areaBtoG
-              }
+                color: color.areaBtoG,
+              },
             },
             data: weekLineData,
             lineSmooth: true,
@@ -354,27 +390,27 @@ export default {
               data: [
                 {
                   type: "average",
-                  name: "平均值"
-                }
+                  name: "平均值",
+                },
               ],
               precision: 0,
               label: {
                 normal: {
-                  formatter: "平均值: \n {c}"
-                }
+                  formatter: "平均值: \n {c}",
+                },
               },
               lineStyle: {
                 normal: {
-                  color: "rgba(248,211,81,.7)"
-                }
-              }
+                  color: "rgba(248,211,81,.7)",
+                },
+              },
             },
             tooltip: {
               position: "top",
               formatter: "{c} m",
               backgroundColor: "rgba(28,152,232,.2)",
-              padding: 6
-            }
+              padding: 6,
+            },
           },
           {
             name: "占位背景",
@@ -383,23 +419,23 @@ export default {
               normal: {
                 show: true,
                 color: "#000",
-                opacity: 0
-              }
+                opacity: 0,
+              },
             },
             silent: true,
             barWidth: "50%",
-            data: weekMaxData,
-            animation: false
-          }
-        ]
+            // data: weekMaxData,
+            animation: false,
+          },
+        ],
       };
 
       this.chart.setOption(option);
-    }
+    },
   },
   destroyed() {
     window.onresize = null;
-  }
+  },
 };
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="bottomLeftChart" style="width:11.25rem;height:6.25rem;"></div>
+    <div id="bottomLeftChart" style="width: 11.25rem; height: 6.25rem"></div>
   </div>
 </template>
 
@@ -9,127 +9,99 @@ import echartMixins from "@/utils/resizeMixins";
 export default {
   data() {
     return {
-      chart: null
+      chart: null,
+      commission: [],
+      timeArr: [],
+      goodsNum: [],
     };
   },
   mixins: [echartMixins],
+  // created(){
+  //   this.getCountPerformanceAndCommissionSum();
+  // },
   mounted() {
+    // this.getCountPerformanceAndCommissionSum().then((res) => {
+    //   // console.log(1,res)
+    //   this.commission =res[1]
+    //   this.timeArr = res[0]
+    //   console.log(1,res[0])
+
+    //   // res.length
+    //   //   ? this.$message.error("获取数据失败")
+    //   //   : (this.nationChartData = res);
+    // });
+    this.getCountPerformanceAndCommissionSum();
+    this.getGoodsNumSum();
     this.draw();
+    this.charTimg();
   },
   methods: {
+    async getCountPerformanceAndCommissionSum() {
+      const { status, data } = await this.$http.get(
+        process.env.VUE_APP_API +
+          "/DataView/getPerformanceAndCommissionSumInMonth"
+      );
+      if (status === 200) {
+        this.commission = data.data[1];
+        // // console.log(this.commission[1]);
+        this.timeArr = data.data[0];
+        // return data.data;
+        // console.log(123,this.timeArr)
+      }
+    },
+
+    async getGoodsNumSum() {
+      const { status, data } = await this.$http.get(
+        process.env.VUE_APP_API + "/DataView/getGoodsNumSumInMonth"
+      );
+      if (status === 200) {
+        this.goodsNum = data.data;
+        // // console.log(this.commission[1]);
+        // this.timeArr = data.data[0];
+        // return data.data;
+        // console.log(123,this.timeArr)
+      }
+    },
+    charTimg() {
+      setInterval(() => {
+        this.draw();
+
+        // this.times = this.times + 1;
+        // this.weeks = this.times % 4;
+      }, 10000);
+    },
+
     draw() {
+      // this.getCountPerformanceAndCommissionSum();
+
       // 基于准备好的dom，初始化echarts实例
-      this.chart = this.$echarts.init(document.getElementById("bottomLeftChart"));
+      this.chart = this.$echarts.init(
+        document.getElementById("bottomLeftChart")
+      );
       //  ----------------------------------------------------------------
-      let category = [
-        "市区",
-        "万州",
-        "江北",
-        "南岸",
-        "北碚",
-        "綦南",
-        "长寿",
-        "永川",
-        "璧山",
-        "江津",
-        "城口",
-        "大足",
-        "垫江",
-        "丰都",
-        "奉节",
-        "合川",
-        "江津区",
-        "开州",
-        "南川",
-        "彭水",
-        "黔江",
-        "石柱",
-        "铜梁",
-        "潼南",
-        "巫山",
-        "巫溪",
-        "武隆",
-        "秀山",
-        "酉阳",
-        "云阳",
-        "忠县",
-        "川东",
-        "检修"
-      ];
-      let lineData = [
-        18092,
-        20728,
-        24045,
-        28348,
-        32808,
-        36097,
-        39867,
-        44715,
-        48444,
-        50415,
-        56061,
-        62677,
-        59521,
-        67560,
-        18092,
-        20728,
-        24045,
-        28348,
-        32808,
-        36097,
-        39867,
-        44715,
-        48444,
-        50415,
-        36097,
-        39867,
-        44715,
-        48444,
-        50415,
-        50061,
-        32677,
-        49521,
-        32808
-      ];
-      let barData = [
-        4600,
-        5000,
-        5500,
-        6500,
-        7500,
-        8500,
-        9900,
-        12500,
-        14000,
-        21500,
-        23200,
-        24450,
-        25250,
-        33300,
-        4600,
-        5000,
-        5500,
-        6500,
-        7500,
-        8500,
-        9900,
-        22500,
-        14000,
-        21500,
-        8500,
-        9900,
-        12500,
-        14000,
-        21500,
-        23200,
-        24450,
-        25250,
-        7500
-      ];
+      // console.log(2,this.timeArr);
+      let category = [];
+      for (let i = 0; i < 30; i++) {
+        category.push(this.timeArr[i]); //属性
+        //arr.push(obj[i]); //值
+      }
+      console.log(2, category);
+
+      let barData = [];
+      // console.log(JSON.stringify(this.timeArr));
+
+      for (let i = 0; i < 30; i++) {
+        barData.push(this.commission[i]/100); //属性
+        //arr.push(obj[i]); //值
+      }
+      console.log(barData);
+      // console.log(123);
       let rateData = [];
-      for (let i = 0; i < 33; i++) {
-        let rate = barData[i] / lineData[i];
-        rateData[i] = rate.toFixed(2);
+      for (let i = 0; i < 30; i++) {
+        // let rate = barData[i] / lineData[i];
+        // let rate = i + 1;
+        // rateData[i] = rate.toFixed(2);
+        rateData.push(this.goodsNum[i]); //属性
       }
 
       let option = {
@@ -140,8 +112,8 @@ export default {
           textStyle: {
             color: "#B4B4B4",
             fontSize: 16,
-            fontWeight: "normal"
-          }
+            fontWeight: "normal",
+          },
         },
         tooltip: {
           trigger: "axis",
@@ -150,61 +122,61 @@ export default {
             type: "shadow",
             label: {
               show: true,
-              backgroundColor: "#7B7DDC"
-            }
-          }
+              backgroundColor: "#7B7DDC",
+            },
+          },
         },
         legend: {
-          data: ["已贯通", "计划贯通", "贯通率"],
+          data: ["日签单数",  "日获佣金"],
           textStyle: {
-            color: "#B4B4B4"
+            color: "#B4B4B4",
           },
-          top: "0%"
+          top: "0%",
         },
         grid: {
           x: "8%",
           width: "88%",
-          y: "4%"
+          y: "4%",
         },
         xAxis: {
           data: category,
           axisLine: {
             lineStyle: {
-              color: "#B4B4B4"
-            }
+              color: "#B4B4B4",
+            },
           },
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         yAxis: [
           {
             splitLine: { show: false },
             axisLine: {
               lineStyle: {
-                color: "#B4B4B4"
-              }
+                color: "#B4B4B4",
+              },
             },
 
             axisLabel: {
-              formatter: "{value} "
-            }
+              formatter: "{value} ",
+            },
           },
           {
             splitLine: { show: false },
             axisLine: {
               lineStyle: {
-                color: "#B4B4B4"
-              }
+                color: "#B4B4B4",
+              },
             },
             axisLabel: {
-              formatter: "{value} "
-            }
-          }
+              formatter: "{value} ",
+            },
+          },
         ],
         series: [
           {
-            name: "贯通率",
+            name: "日签单数",
             type: "line",
             smooth: true,
             showAllSymbol: true,
@@ -213,14 +185,14 @@ export default {
             yAxisIndex: 1,
             itemStyle: {
               normal: {
-                color: "#F02FC2"
-              }
+                color: "#F02FC2",
+              },
             },
-            data: rateData
+            data: rateData,
           },
 
           {
-            name: "已贯通",
+            name: "日获佣金",
             type: "bar",
             barWidth: 10,
             itemStyle: {
@@ -228,40 +200,40 @@ export default {
                 barBorderRadius: 5,
                 color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: "#956FD4" },
-                  { offset: 1, color: "#3EACE5" }
-                ])
-              }
+                  { offset: 1, color: "#3EACE5" },
+                ]),
+              },
             },
-            data: barData
+            data: barData,
           },
 
-          {
-            name: "计划贯通",
-            type: "bar",
-            barGap: "-100%",
-            barWidth: 10,
-            itemStyle: {
-              normal: {
-                barBorderRadius: 5,
-                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "rgba(156,107,211,0.8)" },
-                  { offset: 0.2, color: "rgba(156,107,211,0.5)" },
-                  { offset: 1, color: "rgba(156,107,211,0.2)" }
-                ])
-              }
-            },
-            z: -12,
+          // {
+          //   name: "计划贯通",
+          //   type: "bar",
+          //   barGap: "-100%",
+          //   barWidth: 10,
+          //   itemStyle: {
+          //     normal: {
+          //       barBorderRadius: 5,
+          //       color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          //         { offset: 0, color: "rgba(156,107,211,0.8)" },
+          //         { offset: 0.2, color: "rgba(156,107,211,0.5)" },
+          //         { offset: 1, color: "rgba(156,107,211,0.2)" }
+          //       ])
+          //     }
+          //   },
+          //   z: -12,
 
-            data: lineData
-          }
-        ]
+          //   data: lineData
+          // }
+        ],
       };
       this.chart.setOption(option);
-    }
+    },
   },
   destroyed() {
     window.onresize = null;
-  }
+  },
 };
 </script>
 

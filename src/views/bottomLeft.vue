@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Author: xch
+ * @Date: 2020-09-20 02:39:12
+ * @FilePath: \vue-framed:\wamp64\www\ep-data-view\src\views\bottomLeft.vue
+ * @LastEditTime: 2021-05-22 02:32:04
+ * @LastEditors: xch
+-->
 <template>
   <div id="bottomLeft">
     <div class="bg-color-black">
@@ -6,7 +14,7 @@
           <icon name="chart-bar"></icon>
         </span>
         <div class="d-flex">
-          <span class="fs-xl text mx-2">数据统计图</span>
+          <span class="fs-xl text mx-2">本月数据统计</span>
         </div>
       </div>
       <div>

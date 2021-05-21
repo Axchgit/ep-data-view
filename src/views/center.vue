@@ -17,16 +17,16 @@
         <dv-scroll-ranking-board :config="ranking" style="height:2.75rem" />
       </div>
       <div class="percent">
-        <div class="item bg-color-black">
+        <!-- <div class="item bg-color-black">
           <span>今日任务通过率</span>
           <centerChart :id="rate[0].id" :tips="rate[0].tips" :colorObj="rate[0].colorData" />
         </div>
         <div class="item bg-color-black">
           <span>今日任务达标率</span>
           <centerChart :id="rate[1].id" :tips="rate[1].tips" :colorObj="rate[1].colorData" />
-        </div>
+        </div> -->
         <div class="water">
-          <dv-water-level-pond :config="water" style="height: 1.5rem" />
+          <dv-water-level-pond :config="water" style="height: 3rem" />
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import centerChart from "@/components/echart/center/centerChartRate";
+// import centerChart from "@/components/echart/center/centerChartRate";
 
 export default {
   data() {
@@ -96,7 +96,7 @@ export default {
         unit: "",
       },
       water: {
-        data: [24, 45],
+        data: [45],
         shape: "roundRect",
         formatter: "{value}%",
         waveNum: 3,
@@ -160,7 +160,7 @@ export default {
     },
   },
   components: {
-    centerChart,
+    // centerChart,
     // centerChart1,
     // centerChart2
   },
