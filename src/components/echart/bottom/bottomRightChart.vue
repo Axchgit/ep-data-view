@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div id="bottomRightChart" style="width: 11.25rem; height: 6rem"></div>
+    <dv-decoration-11 style="width: 3rem; height: 50px; left: 7rem"
+      >第{{ weeks + 1 }}周</dv-decoration-11
+    >
+    <div id="bottomRightChart" style="width: 11.25rem; height: 5rem"></div>
   </div>
 </template>
 
@@ -13,8 +16,8 @@ export default {
       times: 0,
       weeks: 0,
       chart: null,
-      weekLineCountData:[],
-      startTime:0
+      weekLineCountData: [],
+      startTime: 0,
     };
   },
   mounted() {
@@ -29,11 +32,10 @@ export default {
         process.env.VUE_APP_API + "/DataView/getOrderSumByDayInFourWeek"
       );
       if (status === 200) {
-        this.weekLineCountData = data.data[1]
-        this.startTime = data.data[0]
+        this.weekLineCountData = data.data[1];
+        this.startTime = data.data[0];
       }
     },
-
 
     charTimg() {
       setInterval(() => {
@@ -53,7 +55,7 @@ export default {
       // let dateBase = new Date();
       // let year = dateBase.getFullYear();
       // let dottedBase = +dateBase + 1000 * 3600 * 24;
-      let dottedBase = this.startTime*1000 + 1000 * 3600 * 24;
+      let dottedBase = this.startTime * 1000 + 1000 * 3600 * 24;
       // console.log(this.weekLineCountData)
 
       let weekCategory = [];
@@ -82,7 +84,9 @@ export default {
         // weekMaxData.push(maxData);
         // var distance = Math.round(Math.random() * 11000 + 500);
         // weekLineData.push(distance);
-        weekLineData.push(this.weekLineCountData[(this.weeks + 1) * 7 - i - 1]+20 );
+        weekLineData.push(
+          this.weekLineCountData[(this.weeks + 1) * 7 - i - 1] + 20
+        );
         // console.log(this.weekLineCountData[(this.weeks + 1) * 7 - i - 1])
 
         // 雷达图数据

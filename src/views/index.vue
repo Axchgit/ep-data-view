@@ -11,7 +11,7 @@
               style="width: 2.5rem; height: 0.625rem"
             />
             <div class="title">
-              <span class="title-text">大数据可视化平台</span>
+              <span class="title-text">学创科技大数据</span>
               <dv-decoration-6
                 class="title-bototm"
                 :reverse="true"
@@ -42,10 +42,10 @@
               "
             >
               <span class="react-before"></span>
-              <span class="text">数据分析1</span>
+              <span class="text">数据分析</span>
             </div>
             <div class="react-right ml-3" style="background-color: #0f1325">
-              <span class="text colorBlue">数据分析2</span>
+              <!-- <span class="text colorBlue">数据分析</span> -->
             </div>
           </div>
           <div style="width: 40%" class="d-flex">
@@ -61,9 +61,7 @@
               "
             >
               <span class="react-after"></span>
-              <span class="text">{{
-                nowTime
-              }}</span>
+              <span class="text">{{ nowTime }}</span>
             </div>
           </div>
         </div>
@@ -73,26 +71,27 @@
           <div class="content-box">
             <div>
               <dv-border-box-12>
-                <centerLeft1 />
+                <centerLeft2 />
               </dv-border-box-12>
             </div>
             <div>
               <dv-border-box-12>
-                <centerLeft2 />
+                <centerLeft1 />
               </dv-border-box-12>
             </div>
+
             <!-- 中间 -->
             <div>
               <center />
             </div>
             <!-- 中间 -->
             <div>
-              <centerRight2 />
-            </div>
-            <div>
               <dv-border-box-13>
                 <centerRight1 />
               </dv-border-box-13>
+            </div>
+            <div>
+              <centerRight2 />
             </div>
           </div>
 
@@ -138,7 +137,7 @@ export default {
   },
   // filters: {
   //   moment: function () {
-  //     moment.locale(); 
+  //     moment.locale();
   //     return moment().format('LLLL');
   //   },
   //   formatDate: function (value) {
@@ -199,8 +198,8 @@ export default {
   mounted() {
     this.cancelLoading();
     this.timer = setInterval(() => {
-      moment.locale('zh-cn')
-      this.nowTime = moment().format('YYYY年 Mo Do dddd HH:mm:ss'); // 修改数据date
+      moment.locale("zh-cn");
+      this.nowTime = moment().format("YYYY年 Mo Do dddd HH:mm:ss"); // 修改数据date
     }, 1000);
   },
   methods: {

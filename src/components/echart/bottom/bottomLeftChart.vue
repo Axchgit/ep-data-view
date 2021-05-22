@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="bottomLeftChart" style="width: 11.25rem; height: 6.25rem"></div>
+    <div id="bottomLeftChart" style="width: 14rem; height: 6.25rem"></div>
   </div>
 </template>
 
@@ -13,6 +13,7 @@ export default {
       commission: [],
       timeArr: [],
       goodsNum: [],
+      timeRun: null,
     };
   },
   mixins: [echartMixins],
@@ -63,12 +64,15 @@ export default {
       }
     },
     charTimg() {
-      setInterval(() => {
+      this.timeRun = setInterval(() => {
         this.draw();
+      }, 1000);
 
-        // this.times = this.times + 1;
-        // this.weeks = this.times % 4;
-      }, 10000);
+      setTimeout(() => {
+        clearInterval(this.timeRan);
+        // this.timer = null;
+        // this.isAble = false;
+      }, 20000);
     },
 
     draw() {
@@ -85,16 +89,16 @@ export default {
         category.push(this.timeArr[i]); //属性
         //arr.push(obj[i]); //值
       }
-      console.log(2, category);
+      // console.log(2, category);
 
       let barData = [];
       // console.log(JSON.stringify(this.timeArr));
 
       for (let i = 0; i < 30; i++) {
-        barData.push(this.commission[i]/100); //属性
+        barData.push(this.commission[i] / 100); //属性
         //arr.push(obj[i]); //值
       }
-      console.log(barData);
+      // console.log(barData);
       // console.log(123);
       let rateData = [];
       for (let i = 0; i < 30; i++) {
@@ -127,7 +131,7 @@ export default {
           },
         },
         legend: {
-          data: ["日签单数",  "日获佣金"],
+          data: ["日签单数", "日获佣金"],
           textStyle: {
             color: "#B4B4B4",
           },

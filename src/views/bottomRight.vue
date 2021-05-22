@@ -3,7 +3,7 @@
  * @Author: xch
  * @Date: 2020-09-20 02:39:12
  * @FilePath: \vue-framed:\wamp64\www\ep-data-view\src\views\bottomRight.vue
- * @LastEditTime: 2021-05-22 02:31:48
+ * @LastEditTime: 2021-05-22 12:00:09
  * @LastEditors: xch
 -->
 <template>
@@ -14,7 +14,7 @@
           <icon name="chart-area"></icon>
         </span>
         <div class="d-flex">
-          <span class="fs-xl text mx-2">近四周出单量</span>
+          <span class="fs-xl text mx-2">近四周每周出单量</span>
           <div class="decoration2">
             <dv-decoration-2 :reverse="true" style="width:5px;height:480px;" />
           </div>

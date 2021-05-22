@@ -7,10 +7,20 @@
         </span>
         <div class="d-flex">
           <span class="fs-xl text mx-2">月度业绩佣金排行榜</span>
+                    <dv-decoration-3
+            style="
+              width: 1.25rem;
+              height: 0.25rem;
+              position: relative;
+              top: -0.0375rem;
+            "
+          />
         </div>
+        
       </div>
+      
       <div class="d-flex jc-center body-box">
-        <dv-scroll-board :config="config" style="width:3.375rem;height:4.28rem" />
+        <dv-scroll-board :config="config" style="width100%;height:4rem" />
       </div>
     </div>
   </div>
@@ -60,15 +70,16 @@ export default {
   methods: {
     async fetchList() {
       const { status, data } = await this.$http.get(
-        process.env.VUE_APP_API+"/DataView/expecCommissionRanking"
+        process.env.VUE_APP_API+"/DataView/getCommissionRankingInThisMonth"
       );
       if (status === 200) {
         if (
           JSON.stringify(data.data) !== JSON.stringify(this.rightOnedataArr)
         ) {
+          this.newData = [];
           this.rightOnedataArr = data.data;
-          let valueArr = Object.values(this.rightOnedataArr);
-          console.log(Object.values(valueArr));
+          // let valueArr = Object.values(this.rightOnedataArr);
+          // console.log(Object.values(valueArr));
           //知识点:处理对象数组
           for (let i = 0; i < this.rightOnedataArr["length"]; i++) {
             this.newData.push(Object.values(this.rightOnedataArr[i]));
@@ -79,7 +90,7 @@ export default {
           this.config = {
             header: ["姓名" ,"预计佣金"],
             data: this.newData,
-            rowNum: 7, //表格行数
+            rowNum: 5, //表格行数
             headerHeight: 35,
             headerBGC: "#0f1325", //表头
             oddRowBGC: "#0f1325", //奇数行
@@ -115,7 +126,7 @@ export default {
 #centreRight1 {
   padding: 0.2rem;
   height: 5.125rem;
-  min-width: 3.75rem;
+  min-width: 4rem;
   border-radius: 0.0625rem;
   .bg-color-black {
     height: 4.8125rem;
