@@ -50,7 +50,7 @@
           </div>
           <div style="width: 40%" class="d-flex">
             <div class="react-left bg-color-blue mr-3">
-              <span class="text fw-b">vue-big-screen</span>
+              <span class="text fw-b">ep-big-screen</span>
             </div>
             <div
               class="react-left mr-4"
